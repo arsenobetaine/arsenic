@@ -1,6 +1,6 @@
 import os
 import discord
-from discord import app_commands
+from discord import app_commands, Activity, ActivityType
 from flask import Flask
 import threading
 
@@ -18,6 +18,10 @@ async def hello_command(interaction: discord.Interaction):
 async def on_ready():
     await tree.sync()
     print(f"Bot is ready. Logged in as {client.user}")
+
+    # Set a custom bot status
+    activity = Activity(type=ActivityType.playing, name="Arsenic")
+    await client.change_presence(status=discord.Status.online, activity=activity)
 
 # --- Flask Keep-Alive Server ---
 app = Flask(__name__)
