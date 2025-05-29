@@ -1,0 +1,2 @@
+# arsenic
+Arsenic Discord Bot
