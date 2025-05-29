@@ -36,4 +36,4 @@ def keep_alive():
 
 # --- Start Everything ---
 keep_alive()
-client.run(os.getenv("TOKEN"))
+client.run(os.getenv("DISCORD_BOT_TOKEN"))
