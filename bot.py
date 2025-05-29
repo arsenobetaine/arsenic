@@ -1,22 +1,23 @@
 import os
 import discord
-from discord.ext import commands
+from discord import app_commands
 from flask import Flask
 import threading
 
-# --- Discord Bot Setup ---
+# --- Discord Client Setup ---
 intents = discord.Intents.default()
-intents.message_content = True
+client = discord.Client(intents=intents)
+tree = app_commands.CommandTree(client)
 
-bot = commands.Bot(command_prefix="!", intents=intents)
+# --- Slash Command ---
+@tree.command(name="hello", description="Say hello!")
+async def hello_command(interaction: discord.Interaction):
+    await interaction.response.send_message("Hello!")
 
-@bot.event
+@client.event
 async def on_ready():
-    print(f"Bot is ready. Logged in as {bot.user}")
-
-@bot.command()
-async def ping(ctx):
-    await ctx.send("Pong!")
+    await tree.sync()
+    print(f"Bot is ready. Logged in as {client.user}")
 
 # --- Flask Keep-Alive Server ---
 app = Flask(__name__)
@@ -25,15 +26,14 @@ app = Flask(__name__)
 def home():
     return "Bot is running!"
 
-def run():
+def run_flask():
     port = int(os.environ.get("PORT", 3000))
-    print(f"Starting web server on port {port}...")
     app.run(host="0.0.0.0", port=port)
 
 def keep_alive():
-    t = threading.Thread(target=run)
-    t.start()
+    thread = threading.Thread(target=run_flask)
+    thread.start()
 
-# --- Start Flask and Discord Bot ---
+# --- Start Everything ---
 keep_alive()
-bot.run(os.getenv("DISCORD_BOT_TOKEN"))
+client.run(os.getenv("DISCORD_BOT_TOKEN"))
