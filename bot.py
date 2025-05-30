@@ -10,6 +10,7 @@ from commands.hello import hello_command
 
 TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 ROLE_ID = int(os.getenv("AUTO_ROLE_ID"))
+GUILD_ID = int(os.getenv("GUILD_ID"))
 
 # Setup client
 intents = discord.Intents.default()
@@ -18,10 +19,10 @@ client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
 # Register events
-client.event(on_ready_event(tree))
+client.event(on_ready_event(tree, GUILD_ID))
 client.event(on_member_join_event(ROLE_ID))
 
-# Slash command
+# Slash command (registered only to the guild in on_ready)
 tree.command(name="hello", description="Say hello!")(hello_command)
 
 # Start bot

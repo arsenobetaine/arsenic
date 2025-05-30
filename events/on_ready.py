@@ -1,11 +1,12 @@
 import discord
 from discord import app_commands, Activity, ActivityType
 
-def on_ready_event(tree: app_commands.CommandTree):
+def on_ready_event(tree: app_commands.CommandTree, guild_id: int):
     async def on_ready():
         try:
-            synced = await tree.sync()  # only for global cmds
-            print(f"Synced {len(synced)} command(s) globally.")
+            guild = discord.Object(id=guild_id)
+            synced = await tree.sync(guild=guild)
+            print(f"Synced {len(synced)} command(s) to guild {guild_id}.")
         except discord.HTTPException as e:
             print(f"[ERROR] Failed to sync commands: {e}")
 
