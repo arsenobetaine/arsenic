@@ -3,7 +3,7 @@ async def purge_command(interaction):
         await interaction.response.send_message("You don't have permission to use this command.", ephemeral=True)
         return
 
-    await interaction.response.defer(ephemeral=True)  # Acknowledge the command
+    await interaction.response.defer(ephemeral=True)
 
     try:
         deleted = await interaction.channel.purge()
