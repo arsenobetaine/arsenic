@@ -6,8 +6,6 @@ from discord import app_commands
 from keep_alive import keep_alive
 from events.on_ready import on_ready_event
 from events.on_member_join import on_member_join_event
-from commands.hello import hello_command
-from commands.purge import purge_command
 
 TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 ROLE_ID = int(os.getenv("AUTO_ROLE_ID"))
@@ -22,22 +20,29 @@ tree = app_commands.CommandTree(client)
 client.event(on_ready_event(tree))
 client.event(on_member_join_event(ROLE_ID))
 
-# Register global slash commands with dm_permission explicitly set
-hello_cmd = app_commands.Command(
-    name="hello",
-    description="Say hello!",
-    callback=hello_command,
-    dm_permission=True
-)
-purge_cmd = app_commands.Command(
-    name="purge",
-    description="Delete all messages in this channel.",
-    callback=purge_command,
-    dm_permission=False
-)
+# Define a command group with correct dm_permission
+class GlobalCommands(app_commands.Group):
+    @app_commands.command(
+        name="hello",
+        description="Say hello!",
+        # ✅ This will allow DMs in supported versions
+    )
+    async def hello(self, interaction: discord.Interaction):
+        await interaction.response.send_message("Hello from DMs or server!", ephemeral=True)
 
-tree.add_command(hello_cmd)
-tree.add_command(purge_cmd)
+    @app_commands.command(
+        name="purge",
+        description="Delete all messages in this channel.",
+    )
+    async def purge(self, interaction: discord.Interaction):
+        # Prevent use in DMs
+        if interaction.guild is None:
+            await interaction.response.send_message("This command can't be used in DMs.", ephemeral=True)
+            return
+        await interaction.channel.purge()
+        await interaction.response.send_message("Messages deleted.", ephemeral=True)
+
+tree.add_command(GlobalCommands(name=""))  # Registers hello and purge as global commands
 
 # Start bot
 keep_alive()
