@@ -22,14 +22,22 @@ tree = app_commands.CommandTree(client)
 client.event(on_ready_event(tree))
 client.event(on_member_join_event(ROLE_ID))
 
-# Register global slash commands
-@tree.command(name="hello", description="Say hello!", dm_permission=True)
-async def wrapped_hello_command(interaction: discord.Interaction):
-    await hello_command(interaction)
+# Register global slash commands with dm_permission explicitly set
+hello_cmd = app_commands.Command(
+    name="hello",
+    description="Say hello!",
+    callback=hello_command,
+    dm_permission=True
+)
+purge_cmd = app_commands.Command(
+    name="purge",
+    description="Delete all messages in this channel.",
+    callback=purge_command,
+    dm_permission=False
+)
 
-@tree.command(name="purge", description="Delete all messages in this channel.", dm_permission=False)
-async def wrapped_purge_command(interaction: discord.Interaction):
-    await purge_command(interaction)
+tree.add_command(hello_cmd)
+tree.add_command(purge_cmd)
 
 # Start bot
 keep_alive()
