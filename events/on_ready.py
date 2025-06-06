@@ -6,7 +6,6 @@ def on_ready_event(tree: discord.app_commands.CommandTree):
             for cmd in tree.get_commands():
                 print(f"[DEBUG] Registered command: /{cmd.name}")
             
-            # Global sync (includes DMs and all servers)
             synced = await tree.sync()
             print(f"[INFO] Globally synced {len(synced)} command(s).")
         
