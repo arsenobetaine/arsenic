@@ -1,2 +1,4 @@
-async def hello_command(interaction):
-    await interaction.response.send_message("im a gay femboy uwu")
+import discord
+
+async def hello_command(interaction: discord.Interaction):
+    await interaction.response.send_message("I'm a femboy kitten UwU!", ephemeral=True)
