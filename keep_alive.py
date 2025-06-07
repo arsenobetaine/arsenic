@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Bot is running!"
+    return "Arsenic"
 
 def run_flask():
     port = int(os.environ.get("PORT", 3000))

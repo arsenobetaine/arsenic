@@ -7,5 +7,5 @@ def on_member_join_event(role_id: int):
             await member.add_roles(role, reason="Auto role on join")
             print(f"[INFO] Assigned role '{role.name}' to {member.name}")
         else:
-            print(f"[ERROR] Role with ID {role_id} not found in {member.guild.name}")
+            print(f"[ERROR] Role with ID {role_id} not found.")
     return on_member_join

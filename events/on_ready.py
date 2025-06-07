@@ -1,14 +1,17 @@
 import discord
+from config import DEV_GUILD_ID
 
 def on_ready_event(tree: discord.app_commands.CommandTree):
     async def on_ready():
         try:
-            for cmd in tree.get_commands():
-                print(f"[DEBUG] Registered command: /{cmd.name}")
-            
-            synced = await tree.sync()
-            print(f"[INFO] Globally synced {len(synced)} command(s).")
-        
+            if DEV_GUILD_ID:
+                guild = discord.Object(id=DEV_GUILD_ID)
+                tree.copy_global_to(guild=guild)
+                synced = await tree.sync(guild=guild)
+                print(f"[INFO] Synced {len(synced)} commands to dev guild.")
+            else:
+                synced = await tree.sync()
+                print(f"[INFO] Globally synced {len(synced)} command(s).")
         except discord.HTTPException as e:
             print(f"[ERROR] Failed to sync commands: {e}")
 
