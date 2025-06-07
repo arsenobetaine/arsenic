@@ -6,12 +6,12 @@ def on_ready_event(tree: discord.app_commands.CommandTree):
         try:
             if DEV_GUILD_ID:
                 guild = discord.Object(id=DEV_GUILD_ID)
-                tree.copy_global_to(guild=guild)
+                # ONLY sync to guild; do NOT copy global commands
                 synced = await tree.sync(guild=guild)
-                print(f"[INFO] Synced {len(synced)} commands to dev guild.")
+                print(f"[INFO] Synced {len(synced)} commands to DEV guild.")
             else:
                 synced = await tree.sync()
-                print(f"[INFO] Globally synced {len(synced)} command(s).")
+                print(f"[INFO] Synced {len(synced)} commands globally.")
         except discord.HTTPException as e:
             print(f"[ERROR] Failed to sync commands: {e}")
 
@@ -19,3 +19,4 @@ def on_ready_event(tree: discord.app_commands.CommandTree):
         await tree.client.change_presence(status=discord.Status.online, activity=activity)
         print(f"[READY] Bot is ready. Logged in as {tree.client.user}")
     return on_ready
+
