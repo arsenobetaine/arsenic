@@ -1,2 +1,2 @@
-# arsenic
-Arsenic Discord Bot
+# Arsenic
+A bot that makes breathing easier.
