@@ -1,14 +1,18 @@
 {
-  "name": "arsenic-bot",
+  "name": "arsenic",
   "version": "1.0.0",
   "description": "A bot that makes breathing easier.",
-  "main": "bot.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node index.js",
+    "deploy": "pm2-runtime start deploy/ecosystem.config.js"
   },
   "dependencies": {
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "pm2": "^6.0.14"
   },
   "engines": {
     "node": ">=18.0.0"
