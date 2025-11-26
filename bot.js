@@ -93,44 +93,30 @@ client.once('ready', async () => {
   try {
     console.log('Started clearing and refreshing application (/) commands.');
 
-    // Helper to fetch and preserve Entry Point
-    const preserveEntryPoint = async (commands) => {
-      const entryPoint = commands.find(cmd => cmd.name === 'launch' || cmd.default_member_permissions === null); // Adjust criteria if needed (e.g., name 'launch')
-      return entryPoint ? [entryPoint] : [];
-    };
-
-    // Fetch global commands and preserve Entry Point for global clear/update
-    const globalCommands = await rest.get(Routes.applicationCommands(client.user.id));
-    const globalPreserved = await preserveEntryPoint(globalCommands);
-
-    // Clear global (but keep Entry Point)
+    // Clear all global commands (set to empty array)
     await rest.put(
       Routes.applicationCommands(client.user.id),
-      { body: globalPreserved } // Empty except Entry Point
+      { body: [] }
     );
-    console.log('Cleared global commands (preserving Entry Point).');
+    console.log('Cleared all global commands.');
 
-    // Fetch guild commands and preserve Entry Point for guild clear/update
-    const guildCommands = await rest.get(Routes.applicationGuildCommands(client.user.id, guildId));
-    const guildPreserved = await preserveEntryPoint(guildCommands);
-
-    // Clear guild (but keep Entry Point)
+    // Clear all guild-specific commands (set to empty array)
     await rest.put(
       Routes.applicationGuildCommands(client.user.id, guildId),
-      { body: guildPreserved }
+      { body: [] }
     );
-    console.log('Cleared guild commands (preserving Entry Point).');
+    console.log('Cleared all guild commands.');
 
-    // Now register your new commands globally, appending preserved Entry Point
-    // await rest.put(
-    //   Routes.applicationCommands(client.user.id),
-    //   { body: [...slashCommands, ...globalPreserved] }
-    // );
+    // Now register your new commands globally (up to 1 hour to propagate)
+    await rest.put(
+      Routes.applicationCommands(client.user.id),
+      { body: slashCommands }
+    );
 
-    // Register guild-specific, appending preserved Entry Point
+    // Also register guild-specific (instant in your server)
     await rest.put(
       Routes.applicationGuildCommands(client.user.id, guildId),
-      { body: [...slashCommands, ...guildPreserved] }
+      { body: slashCommands }
     );
 
     console.log('Successfully reloaded application (/) commands.');
@@ -138,4 +124,5 @@ client.once('ready', async () => {
     console.error(error);
   }
 });
+
 client.login(process.env.TOKEN);
