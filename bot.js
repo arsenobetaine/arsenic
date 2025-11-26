@@ -122,10 +122,10 @@ client.once('ready', async () => {
     console.log('Cleared guild commands (preserving Entry Point).');
 
     // Now register your new commands globally, appending preserved Entry Point
-    await rest.put(
-      Routes.applicationCommands(client.user.id),
-      { body: [...slashCommands, ...globalPreserved] }
-    );
+    // await rest.put(
+    //   Routes.applicationCommands(client.user.id),
+    //   { body: [...slashCommands, ...globalPreserved] }
+    // );
 
     // Register guild-specific, appending preserved Entry Point
     await rest.put(
