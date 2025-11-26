@@ -1,0 +1,14 @@
+const { SlashCommandBuilder } = require('discord.js');
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('hello')
+    .setDescription('Says hello'),
+  async execute(interactionOrMessage, args) {
+    if (interactionOrMessage.reply) { // Slash interaction
+      await interactionOrMessage.reply('Hello!');
+    } else { // Prefix message
+      interactionOrMessage.channel.send('Hello!');
+    }
+  }
+};
