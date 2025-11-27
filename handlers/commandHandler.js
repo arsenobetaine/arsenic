@@ -29,7 +29,7 @@ async function registerCommands(client) {
   const slashCommands = Array.from(client.commands.values()).map(cmd => cmd.data.toJSON());
 
   try {
-    // Guild
+    // Guild-specific
     await rest.put(
       Routes.applicationGuildCommands(client.user.id, client.config.guildId),
       { body: [] }
@@ -41,9 +41,15 @@ async function registerCommands(client) {
     console.log('Guild commands registered.');
 
     // Global
+    const currentGlobals = await rest.get(Routes.applicationCommands(client.user.id));
+    const entryPoint = currentGlobals.find(cmd => cmd.type === 5); // PRIMARY_ENTRY_POINT
+    const globalBody = [...slashCommands];
+    if (entryPoint) {
+      globalBody.push(entryPoint);
+    }
     await rest.put(
       Routes.applicationCommands(client.user.id),
-      { body: slashCommands }
+      { body: globalBody }
     );
     console.log('Global commands registered (may take up to 1 hour to appear everywhere).');
   } catch (error) {

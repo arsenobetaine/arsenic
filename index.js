@@ -33,11 +33,11 @@ const rl = readline.createInterface({
 rl.on('line', async (input) => {
   const trimmed = input.trim();
   if (trimmed === 'reload') {
-    loadCommands(client, true);
+    loadCommands(client);
     await registerCommands(client);
     console.log('Commands reloaded.');
-  } else if (trimmed === 'restart') {
-    console.log('Restarting bot...');
+  } else if (trimmed === 'reboot') {
+    console.log('Rebooting bot...');
     process.exit(0);
   }
 });
