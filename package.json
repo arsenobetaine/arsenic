@@ -1,10 +1,10 @@
 {
-  "name": "arsenic-bot",
+  "name": "arsenic",
   "version": "1.0.0",
   "description": "A bot that makes breathing easier.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.js"
   },
   "dependencies": {
     "discord.js": "^14.15.3",
