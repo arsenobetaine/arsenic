@@ -10,7 +10,7 @@ module.exports = {
       .setColor(0x00FFFF);
 
     client.commands.forEach(cmd => {
-      embed.addFields({ name: `/${cmd.data.name}`, value: cmd.data.description, inline: true });
+      embed.addFields({ name: `As.${cmd.data.name}`, value: cmd.data.description, inline: true });
     });
 
     if (interactionOrMessage.reply) {
