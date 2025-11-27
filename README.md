@@ -15,8 +15,7 @@ A bot that makes breathing easier.
 - Member welcome and role assignment.
 - Counting game in designated channel.
 - Help command for command list.
-- Reload command for live updates.
 
 ## Development
 
-Add commands to `commands/<category>/`. Use `/reload` to update without restart.
+Add commands to `commands/<category>/`. In the console, type 'reload' to update commands without restarting the bot.

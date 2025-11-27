@@ -2,7 +2,7 @@ const { ActivityType } = require('discord.js');
 const { registerCommands } = require('../handlers/commandHandler');
 
 module.exports = {
-  name: 'ready',
+  name: 'clientReady',
   once: true,
   async execute(client) {
     console.log(`Logged in as ${client.user.tag}`);
