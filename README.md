@@ -18,4 +18,4 @@ A bot that makes breathing easier.
 
 ## Development
 
-Add commands to `commands/<category>/`. In the console, type 'reload' to update commands without restarting the bot.
+Add commands to `commands/<category>/`. In the console, type 'reload' to update commands without restarting the bot. Type 'restart' to trigger a full bot restart (PM2 will handle it automatically).

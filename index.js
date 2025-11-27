@@ -23,7 +23,7 @@ client.config = config;
 loadCommands(client);
 loadEvents(client);
 
-// Console input for reload.
+// Console input for commands.
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -31,10 +31,14 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', async (input) => {
-  if (input.trim() === 'reload') {
+  const trimmed = input.trim();
+  if (trimmed === 'reload') {
     loadCommands(client);
     await registerCommands(client);
     console.log('Commands reloaded.');
+  } else if (trimmed === 'restart') {
+    console.log('Restarting bot...');
+    process.exit(0);
   }
 });
 
