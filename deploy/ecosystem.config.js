@@ -4,8 +4,8 @@ module.exports = {
     script: './index.js',
     watch: true,
     ignore_watch: ['node_modules', 'data'],
-    exec_mode: 'cluster',
-    instances: 'max', 
+    exec_mode: 'fork',
+    instances: 1,
     env: {
       NODE_ENV: 'production',
     },
