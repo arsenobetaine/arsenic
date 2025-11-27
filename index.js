@@ -36,8 +36,8 @@ rl.on('line', async (input) => {
     loadCommands(client);
     await registerCommands(client);
     console.log('Commands reloaded.');
-  } else if (trimmed === 'restart') {
-    console.log('Restarting bot...');
+  } else if (trimmed === 'reboot') {
+    console.log('Rebooting bot...');
     process.exit(0);
   }
 });
