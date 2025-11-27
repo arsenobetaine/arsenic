@@ -42,7 +42,7 @@ async function registerCommands(client) {
 
     // Global
     const currentGlobals = await rest.get(Routes.applicationCommands(client.user.id));
-    const entryPoint = currentGlobals.find(cmd => cmd.type === 5); // PRIMARY_ENTRY_POINT
+    const entryPoint = currentGlobals.find(cmd => cmd.type === 4); // PRIMARY_ENTRY_POINT
     const globalBody = [...slashCommands];
     if (entryPoint) {
       globalBody.push(entryPoint);
@@ -51,7 +51,7 @@ async function registerCommands(client) {
       Routes.applicationCommands(client.user.id),
       { body: globalBody }
     );
-    console.log('Global commands registered (may take up to 1 hour to appear everywhere).');
+    console.log('Global commands registered.');
   } catch (error) {
     console.error('Error registering commands:', error);
   }
