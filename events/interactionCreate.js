@@ -1,4 +1,5 @@
 const { MessageFlags } = require('discord.js');
+const logger = require('../logger');
 
 module.exports = {
   name: 'interactionCreate',
@@ -11,7 +12,7 @@ module.exports = {
     try {
       await command.execute(interaction, client);
     } catch (error) {
-      console.error(error);
+      logger.error('Error executing interaction:', error);
       if (interaction.replied || interaction.deferred) {
         await interaction.followUp({ content: 'Error executing command.', flags: MessageFlags.Ephemeral });
       } else {

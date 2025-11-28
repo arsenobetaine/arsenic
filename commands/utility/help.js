@@ -6,11 +6,15 @@ module.exports = {
     .setDescription('Lists available commands.'),
   async execute(interactionOrMessage, client) {
     const embed = new EmbedBuilder()
-      .setTitle('Available Commands')
-      .setColor(0x00FFFF);
+      .setTitle('Arsenic Bot Commands')
+      .setDescription('Here\'s a list of all available commands. Use `/` for slash commands or the prefix for text commands.')
+      .setColor(0x5865F2)
+      .setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
+      .setFooter({ text: `Bot version: ${require('../../package.json').version} | Use ${client.config.prefix}help for prefixed version` })
+      .setTimestamp();
 
     client.commands.forEach(cmd => {
-      embed.addFields({ name: `As.${cmd.data.name}`, value: cmd.data.description, inline: true });
+      embed.addFields({ name: `/${cmd.data.name}`, value: cmd.data.description || 'No description available', inline: true });
     });
 
     if (interactionOrMessage.reply) {

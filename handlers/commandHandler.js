@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { REST, Routes } = require('discord.js');
+const logger = require('../logger');
 
 // Load commands from all category folders.
 function loadCommands(client, uncache = false) {
@@ -8,6 +9,7 @@ function loadCommands(client, uncache = false) {
   const categoriesPath = path.join(__dirname, '../commands');
   const categories = fs.readdirSync(categoriesPath);
 
+  let loadedCount = 0;
   for (const category of categories) {
     const commandsPath = path.join(categoriesPath, category);
     const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
@@ -19,8 +21,10 @@ function loadCommands(client, uncache = false) {
       }
       const command = require(filePath);
       client.commands.set(command.data.name, command);
+      loadedCount++;
     }
   }
+  logger.info(`Loaded ${loadedCount} commands.`);
 }
 
 // Register slash commands for the guild and globally.
@@ -38,7 +42,7 @@ async function registerCommands(client) {
       Routes.applicationGuildCommands(client.user.id, client.config.guildId),
       { body: slashCommands }
     );
-    console.log('Guild commands registered.');
+    logger.info('Guild commands registered.');
 
     // Global
     const currentGlobals = await rest.get(Routes.applicationCommands(client.user.id));
@@ -51,9 +55,9 @@ async function registerCommands(client) {
       Routes.applicationCommands(client.user.id),
       { body: globalBody }
     );
-    console.log('Global commands registered.');
+    logger.info('Global commands registered.');
   } catch (error) {
-    console.error('Error registering commands:', error);
+    logger.error('Error registering commands:', error);
   }
 }
 

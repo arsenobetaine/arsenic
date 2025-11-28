@@ -6,6 +6,7 @@ const { loadCommands, registerCommands } = require('./handlers/commandHandler');
 const { loadEvents } = require('./handlers/eventHandler');
 const config = require('./config');
 const readline = require('readline');
+const logger = require('./logger');
 
 const client = new Client({
   intents: [
@@ -33,11 +34,11 @@ const rl = readline.createInterface({
 rl.on('line', async (input) => {
   const trimmed = input.trim();
   if (trimmed === 'reload') {
-    loadCommands(client);
+    loadCommands(client, true);
     await registerCommands(client);
-    console.log('Commands reloaded.');
-  } else if (trimmed === 'reboot') {
-    console.log('Rebooting bot...');
+    logger.info('Commands reloaded.');
+  } else if (trimmed === 'restart') {
+    logger.info('Restarting bot...');
     process.exit(0);
   }
 });
