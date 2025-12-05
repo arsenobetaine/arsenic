@@ -9,8 +9,8 @@ module.exports = {
         .setDescription('The user to get info for.')
         .setRequired(false)),
   async execute(interactionOrMessage, client) {
-    const user = interactionOrMessage.options?.getUser('user') || interactionOrMessage.mentions.users.first() || interactionOrMessage.author || interactionOrMessage.user;
-    const member = await interactionOrMessage.guild.members.fetch(user.id);
+    const user = interactionOrMessage.options?.getUser('user') || interactionOrMessage.mentions.users.first() || interactionOrMessage.user || interactionOrMessage.author;
+    const member = await interactionOrMessage.guild.members.fetch(user.id, { cache: true }).catch(() => null);
 
     const embed = new EmbedBuilder()
       .setTitle(`${user.tag} Info`)
@@ -18,15 +18,11 @@ module.exports = {
       .setColor(0x5865F2)
       .addFields(
         { name: 'ID', value: user.id, inline: true },
-        { name: 'Joined Server', value: member.joinedAt.toDateString(), inline: true },
+        { name: 'Joined Server', value: member ? member.joinedAt.toDateString() : 'Unknown', inline: true },
         { name: 'Account Created', value: user.createdAt.toDateString(), inline: true },
-        { name: 'Roles', value: member.roles.cache.map(role => role.name).join(', ') || 'None', inline: false }
+        { name: 'Roles', value: member ? member.roles.cache.map(role => role.name).join(', ') || 'None' : 'Unknown', inline: false }
       );
 
-    if (interactionOrMessage.reply) {
-      await interactionOrMessage.reply({ embeds: [embed] });
-    } else {
-      interactionOrMessage.channel.send({ embeds: [embed] });
-    }
+    interactionOrMessage.reply ? await interactionOrMessage.reply({ embeds: [embed] }) : interactionOrMessage.channel.send({ embeds: [embed] });
   },
 };

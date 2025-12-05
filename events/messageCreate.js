@@ -7,9 +7,9 @@ module.exports = {
   execute(client, message) {
     if (message.author.bot) return;
 
-    // Handle prefixed commands.
-    if (message.content.startsWith(client.config.prefix)) {
-      const args = message.content.slice(client.config.prefix.length).trim().split(/ +/);
+    const prefix = client.config.prefix;
+    if (message.content.startsWith(prefix)) {
+      const args = message.content.slice(prefix.length).trim().split(/ +/);
       const commandName = args.shift().toLowerCase();
       const command = client.commands.get(commandName);
       if (!command) return;
@@ -23,8 +23,9 @@ module.exports = {
       return;
     }
 
-    // Handle counting.
+    // Counting logic
     const dataPath = path.join(__dirname, '../data/count.json');
+    const backupPath = `${dataPath}.bak`;
     if (!fs.existsSync(dataPath)) return;
 
     let countData;
@@ -46,6 +47,7 @@ module.exports = {
       countData.currentCount = 0;
       countData.lastUserId = null;
       try {
+        fs.copyFileSync(dataPath, backupPath);  // Backup
         fs.writeFileSync(dataPath, JSON.stringify(countData));
         message.channel.send('Wrong count! Reset to 0.').catch(error => logger.error('Error sending reset message:', error));
       } catch (error) {
@@ -60,6 +62,7 @@ module.exports = {
         countData.highScore = number;
       }
       try {
+        fs.copyFileSync(dataPath, backupPath);
         fs.writeFileSync(dataPath, JSON.stringify(countData));
         message.react('✅').catch(error => logger.error('Error reacting:', error));
       } catch (error) {
