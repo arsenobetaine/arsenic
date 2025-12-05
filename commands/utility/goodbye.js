@@ -4,8 +4,11 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('goodbye')
     .setDescription('Says goodbye.'),
-  async execute(interactionOrMessage) {
-    const replyMsg = 'Goodbye!';
-    interactionOrMessage.reply ? await interactionOrMessage.reply(replyMsg) : interactionOrMessage.channel.send(replyMsg);
+  async execute(interactionOrMessage, client) {
+    if (interactionOrMessage.reply) {
+      await interactionOrMessage.reply('Goodbye!');
+    } else {
+      interactionOrMessage.channel.send('Goodbye!');
+    }
   },
 };

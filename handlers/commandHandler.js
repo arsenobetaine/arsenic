@@ -7,15 +7,18 @@ const logger = require('../logger');
 function loadCommands(client, uncache = false) {
   client.commands.clear();
   const categoriesPath = path.join(__dirname, '../commands');
-  const categories = fs.readdirSync(categoriesPath).filter(file => fs.statSync(path.join(categoriesPath, file)).isDirectory());
-  let loadedCount = 0;
+  const categories = fs.readdirSync(categoriesPath);
 
+  let loadedCount = 0;
   for (const category of categories) {
     const commandsPath = path.join(categoriesPath, category);
     const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
     for (const file of commandFiles) {
       const filePath = path.join(commandsPath, file);
-      if (uncache) delete require.cache[require.resolve(filePath)];
+      if (uncache) {
+        delete require.cache[require.resolve(filePath)];
+      }
       const command = require(filePath);
       client.commands.set(command.data.name, command);
       loadedCount++;
@@ -30,21 +33,31 @@ async function registerCommands(client) {
   const slashCommands = Array.from(client.commands.values()).map(cmd => cmd.data.toJSON());
 
   try {
-    // Guild-specific: Clear then register
-    await rest.put(Routes.applicationGuildCommands(client.user.id, client.config.guildId), { body: [] });
-    await rest.put(Routes.applicationGuildCommands(client.user.id, client.config.guildId), { body: slashCommands });
+    // Guild-specific
+    await rest.put(
+      Routes.applicationGuildCommands(client.user.id, client.config.guildId),
+      { body: [] }
+    );
+    await rest.put(
+      Routes.applicationGuildCommands(client.user.id, client.config.guildId),
+      { body: slashCommands }
+    );
     logger.info('Guild commands registered.');
 
-    // Global: Preserve entry point if exists
+    // Global
     const currentGlobals = await rest.get(Routes.applicationCommands(client.user.id));
-    const entryPoint = currentGlobals.find(cmd => cmd.type === 4);  // PRIMARY_ENTRY_POINT
+    const entryPoint = currentGlobals.find(cmd => cmd.type === 4); // PRIMARY_ENTRY_POINT
     const globalBody = [...slashCommands];
-    if (entryPoint) globalBody.push(entryPoint);
-    await rest.put(Routes.applicationCommands(client.user.id), { body: globalBody });
+    if (entryPoint) {
+      globalBody.push(entryPoint);
+    }
+    await rest.put(
+      Routes.applicationCommands(client.user.id),
+      { body: globalBody }
+    );
     logger.info('Global commands registered.');
   } catch (error) {
     logger.error('Error registering commands:', error);
-    throw error;  // Bubble up for handling
   }
 }
 

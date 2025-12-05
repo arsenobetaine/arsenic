@@ -7,10 +7,7 @@ module.exports = {
   once: true,
   async execute(client) {
     logger.info(`Logged in as ${client.user.tag}`);
-    client.user.setPresence({
-      activities: [{ name: `${client.config.prefix}help`, type: ActivityType.Listening }],
-      status: 'online',
-    });
+    client.user.setActivity(`${client.config.prefix}help`, { type: ActivityType.Listening });
     await registerCommands(client);
   },
 };
